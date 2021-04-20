@@ -1,4 +1,14 @@
 ## Ansible testing project
+- About control node test environment with docker on local
+```
+version: "3.9"
+services:
+  ansible:
+    image: ubuntu:20.04
+    stdin_open: true
+    tty: true
+    container_name: ansible
+```
 
 ### ansible control node container installation
 ```shell=
