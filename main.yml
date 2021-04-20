@@ -1,18 +1,38 @@
-- hosts: dev
-  tasks:
-    - name: List swarm services
-      shell: 
-        cmd: docker service ls | grep {{ svc_name }}
-      register: services_list
-      ignore_errors: yes
-    - name: print debug message
-      debug:
-        msg: "{{ services_list }}"
-    - name: echo somthing when error
-      shell:
-        cmd: echo "Service not found" >> ~/test.txt
-      register: result
-      when: "services_list.rc != 0"
-    - name: print handling result
-      debug:
-        msg: "{{ result }}"
+---
+  - name: Play dev
+    hosts: dev
+    gather_facts: yes
+    tasks:
+      - name: List swarm services
+        shell: 
+          cmd: docker service ls | grep {{ svc_name }}
+        register: services_list
+        ignore_errors: yes
+      - name: print debug message
+        debug:
+          msg: "{{ services_list }}"
+      - name: echo somthing when error
+        shell:
+          cmd: echo "Service not found" >> ~/test.txt
+        register: result
+        when: "services_list.rc != 0"
+      - name: print handling result
+        debug:
+          msg: "{{ result }}"
+      - name: print handling result
+        debug:
+          msg: "{{ ansible_distribution }}"
+  - name: Play win
+    hosts: win
+    gather_facts: yes
+    tasks:
+      - name: windows node ping pong
+        win_ping:
+        when: ansible_distribution == 'Ubuntu'
+      - name: Check OS distributions
+        ansible.builtin.setup:
+          filter: ansible_distribution
+        register: host_os
+      - name: print handling result
+        debug:
+          msg: "{{ host_os['ansible_facts']['ansible_distribution'] }}"

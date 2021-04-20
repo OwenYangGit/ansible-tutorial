@@ -32,6 +32,7 @@ ansible -i inventory win -m win_ping
 
 ### Put inventory file list managed machine following example
 ```
+# Windows server managed node
 [win]
 10.1.21.119
 
@@ -44,6 +45,7 @@ ansible_winrm_transport=basic
 ansible_winrm_server_cert_validation=ignore
 ansible_port=5985
 
+# Linux ubuntu 20.04 server LTS managed node
 [dev]
 10.1.1.41
 
