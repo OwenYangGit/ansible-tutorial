@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - 8888:80
+    networks:
+      - mes-network
+    deploy:
+      placement:
+        constraints:
+          - "node.labels.name==AP1"
+networks:
+  mes-network:
+    external:
+      name: my-overlay

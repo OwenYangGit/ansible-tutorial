@@ -1,0 +1,18 @@
+- hosts: dev
+  tasks:
+    - name: List swarm services
+      shell: 
+        cmd: docker service ls | grep {{ svc_name }}
+      register: services_list
+      ignore_errors: yes
+    - name: print debug message
+      debug:
+        msg: "{{ services_list }}"
+    - name: echo somthing when error
+      shell:
+        cmd: echo "Service not found" >> ~/test.txt
+      register: result
+      when: "services_list.rc != 0"
+    - name: print handling result
+      debug:
+        msg: "{{ result }}"
