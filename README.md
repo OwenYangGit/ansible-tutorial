@@ -69,3 +69,22 @@ ansible_ssh_user=test
       debug:
         msg: "{{ message }}"
 ```
+
+### 關於 gather_facts
+這是 ansible 在調用 managed machine 時會取得遠端機器的一些資訊，該功能可以搭配 playbook 的條件式或一些客製化需求的時候使用 , 但需要再 playbook 裡面添加 gather_facts 的參數 , 而 ansible 提供 `setup` 模組來列出可以取得的遠端機器資訊
+```
+  - name: Play win
+    hosts: win
+    gather_facts: yes
+    tasks:
+      # - name: windows node ping pong
+      #   win_ping:
+      #   when: ansible_distribution == 'Ubuntu'
+      - name: Check OS distributions
+        ansible.builtin.setup:
+          filter: ansible_distribution
+        register: host_os
+      - name: print handling result
+        debug:
+          msg: "{{ host_os }}"
+```

@@ -35,4 +35,4 @@
         register: host_os
       - name: print handling result
         debug:
-          msg: "{{ host_os['ansible_facts']['ansible_distribution'] }}"
+          msg: "{{ host_os }}"
