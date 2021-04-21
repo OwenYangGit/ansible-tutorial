@@ -1,0 +1,14 @@
+---
+  - name: Play dev
+    hosts: dev
+    gather_facts: yes
+    tasks:
+      - name: Get stack info
+        community.docker.docker_stack:
+          name: my-nginx
+          state: present
+          compose:
+            - ./stack/docker-compose.yml
+      - name: Pring msg
+        ansible.builtin.debug:
+          var: result.results
