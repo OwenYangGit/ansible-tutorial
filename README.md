@@ -88,3 +88,10 @@ ansible_ssh_user=test
         debug:
           msg: "{{ host_os }}"
 ```
+
+### 在 dev ( Ubuntu 18.04 ) 上安裝調用 docker_stack module 所需的 package
+```
+sudo apt-get install python3-pip
+pip3 install jsondiff
+pip3 install PyYAML
+```
