@@ -5,6 +5,9 @@ version: "3.9"
 services:
   ansible:
     image: ubuntu:20.04
+    # mapping develop folder to ansible container , you can setup any file location on own host
+    volumes:
+      - ./:/playbook
     stdin_open: true
     tty: true
     container_name: ansible
