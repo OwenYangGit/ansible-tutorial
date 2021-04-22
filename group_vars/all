@@ -1,1 +1,2 @@
-svc_name: config-server
+location: ~/mes/test/
+svc_name: my-nginx

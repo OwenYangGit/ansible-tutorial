@@ -9,7 +9,7 @@ services:
     deploy:
       placement:
         constraints:
-          - "node.labels.name==AP1"
+          - "node.labels.name==AP2"
 networks:
   mes-network:
     external:

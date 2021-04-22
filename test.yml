@@ -6,17 +6,18 @@
       - name: Copy compose to hosts
         copy:
           src: ./stack/docker-compose.yml
-          dest: ~/
-      - name: Get stack info
-        # 用 docker_stack module 要在 remote host 上安裝 pip3 install jsondiff && pip3 install pyyaml
-        community.docker.docker_stack:
-          name: my-nginx
-          state: present
-          resolve_image: always
-          with_registry_auth:
-          compose:
-            - ~/docker-compose.yml
-      - name: Remove stack
-        community.docker.docker_stack:
-          name: my-nginx
-          state: absent
+          # 在測試設定 dest 的時候需要在結尾以斜線(/)結束 , 否則 copy module 會視為是檔案 , 而檔案 copy 需要遠端目錄存在才行
+          dest: "{{ location }}"
+      # - name: Get stack info
+      #   # 用 docker_stack module 要在 remote host 上安裝 pip3 install jsondiff && pip3 install pyyaml
+      #   community.docker.docker_stack:
+      #     name: my-nginx
+      #     state: present
+      #     resolve_image: always
+      #     with_registry_auth:
+      #     compose:
+      #       - ~/docker-compose.yml
+      # - name: Remove stack
+      #   community.docker.docker_stack:
+      #     name: my-nginx
+      #     state: absent
