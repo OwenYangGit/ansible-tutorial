@@ -1,0 +1,74 @@
+  - name: Play win
+    hosts: "{{ myHOST }}"
+    tags: [ release , beta , devops ]
+    tasks:
+      - name: whoami
+        win_whoami:
+      - name: copy version , jar file and winsw config to remote host
+        win_copy:
+          src: "{{ item }}"
+          dest: "D://cimforce/BackEndServer/{{ mySERVICE }}/"
+        loop:
+          - version
+          - "target/{{ myJAR }}"
+          - serviceRun.xml
+          - serviceRun.exe
+      - name: execute winsw command
+        win_shell: .\serviceRun.exe status
+        args:
+          chdir: "D://cimforce/BackEndServer/{{ mySERVICE }}/"
+        register: status_result
+      - name: print status_result
+        debug:
+          msg: "{{ status_result }}"
+      - name: if NonExistent
+        win_shell: .\serviceRun.exe install
+        args:
+          chdir: "D://cimforce/BackEndServer/{{ mySERVICE }}/"
+        register: install_result
+        when: '"NonExistent" in status_result.stdout'
+      - name: print install_result
+        debug:
+          msg: "{{ install_result }}"
+      - pause:
+          seconds: 10
+      - name: restart service
+        win_shell: .\serviceRun.exe restart
+        args:
+          chdir: "D://cimforce/BackEndServer/{{ mySERVICE }}/"
+      - name: Wait 120 seconds to check service deploy success or not
+        win_wait_for:
+          port: "{{ myPORT }}"
+          delay: 10
+          timeout: 120
+        register: health_result
+  - name: Play docker
+    hosts: "{{ myHOST }}"
+    tags: dev
+    tasks:
+      - name: Copy stack compose to swarm manager
+        copy:
+          src: ./docker-compose.yml
+          dest: "~/mes/backend/{{ mySERVICE }}/"
+      - name: Ensure overlay network has created
+        shell:
+          cmd: docker network create -d overlay --subnet 10.0.3.0/24  my-overlay || true
+      - name: Ensure log path exists
+        shell: "mkdir -p ~/mes/backend/logs/{{ mySERVICE }}"
+      - name: Deploy stack
+        shell:
+          cmd: "docker stack deploy -c docker-compose.yml {{ mySERVICE }} --with-registry-auth --resolve-image always"
+          chdir: "~/mes/backend/{{ mySERVICE }}/"
+      - name: Wait 120 seconds to check service deploy success or not
+        wait_for:
+          port: "{{ myPORT }}"
+          delay: 10
+          timeout: 120
+        register: health_result
+        ignore_errors: yes
+      - name: print health_result
+        debug:
+          msg: "{{ health_result }}"
+      - name: show service logs with tail 100 lines
+        shell: "docker service logs --tail 100 {{ mySERVICE }}_{{ mySERVICE }} && exit 1"
+        when: "'Timeout' in health_result.msg"
