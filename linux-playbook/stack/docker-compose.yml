@@ -1,0 +1,35 @@
+version: '3'
+services:
+  ${SERVICE_NAME}:
+    image: ${IMAGE}
+    ports:
+      - "${PORT}:${PORT}"
+    networks:
+      - mes-network
+    command: ["sh","-c","${RUN_CMD}"]
+    environment:
+      - APP_LOG_FOLDER=/var/app/log/
+      - EUREKA_SERVER_URL=http://${EUREKA_IP}:8761/eureka/
+      - SPRING_PROFILES_ACTIVE=dev
+      - DEPLOY_VERSION=${VERSION}-${DATE}
+      - APP_PORT=${PORT}
+      - APP_NAME=${SERVICE_NAME}
+    deploy:
+      placement:
+        constraints:
+          - "node.labels.name==${LABEL}"
+      restart_policy:
+        condition: none
+    volumes:
+      - ${SERVICE_NAME}-vol:/var/app/log/
+volumes:
+  ${SERVICE_NAME}-vol:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: /home/deploy/logs/${SERVICE_NAME}
+networks:
+  mes-network:
+    external:
+      name: my-overlay

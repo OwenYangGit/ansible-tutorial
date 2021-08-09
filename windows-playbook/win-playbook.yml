@@ -42,33 +42,3 @@
           delay: 10
           timeout: 120
         register: health_result
-  - name: Play docker
-    hosts: "{{ myHOST }}"
-    tags: dev
-    tasks:
-      - name: Copy stack compose to swarm manager
-        copy:
-          src: ./docker-compose.yml
-          dest: "~/mes/backend/{{ mySERVICE }}/"
-      - name: Ensure overlay network has created
-        shell:
-          cmd: docker network create -d overlay --subnet 10.0.3.0/24  my-overlay || true
-      - name: Ensure log path exists
-        shell: "mkdir -p ~/mes/backend/logs/{{ mySERVICE }}"
-      - name: Deploy stack
-        shell:
-          cmd: "docker stack deploy -c docker-compose.yml {{ mySERVICE }} --with-registry-auth --resolve-image always"
-          chdir: "~/mes/backend/{{ mySERVICE }}/"
-      - name: Wait 120 seconds to check service deploy success or not
-        wait_for:
-          port: "{{ myPORT }}"
-          delay: 10
-          timeout: 120
-        register: health_result
-        ignore_errors: yes
-      - name: print health_result
-        debug:
-          msg: "{{ health_result }}"
-      - name: show service logs with tail 100 lines
-        shell: "docker service logs --tail 100 {{ mySERVICE }}_{{ mySERVICE }} && exit 1"
-        when: "'Timeout' in health_result.msg"
