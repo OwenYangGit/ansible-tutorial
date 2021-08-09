@@ -1,0 +1,25 @@
+---
+- name: Setup hostname
+  hostname:
+    name: "{{ AP2_HOSTNAME }}"
+
+- name: Reset ssh connection for flush group settings
+  meta: reset_connection
+
+- debug: var=hostvars['SWARM_INFO']['token']['stdout']
+
+- debug: var=hostvars['SWARM_INFO']['addr']
+
+- name: Check swarm mode 
+  shell: docker node ls
+  ignore_errors: true
+  register: swarm_status
+
+- name: Add manager node to swarm
+  shell: "docker swarm join --token {{ hostvars['SWARM_INFO']['token']['stdout'] }} {{ hostvars['SWARM_INFO']['addr'] }}:2377"
+  when: swarm_status.rc != 0
+
+- name: Login to default container registry
+  shell: 
+    cmd: "docker login --username {{ REG_USER }} --password-stdin {{ REG_ENDPOINT }}"
+    stdin: "{{ REG_PASS }}"

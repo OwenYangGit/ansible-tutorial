@@ -1,3 +1,10 @@
+## Ansible version
+```
+ansible [core 2.11.5] 
+  python version = 3.8.5 (default, May 27 2021, 13:30:53) [GCC 9.3.0]
+  jinja version = 2.10.1
+  libyaml = True
+```
 ## Ansible testing project
 - About control node test environment with docker on local
 ```

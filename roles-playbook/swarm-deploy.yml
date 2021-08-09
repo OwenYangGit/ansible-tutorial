@@ -1,0 +1,25 @@
+---
+- name: Setup pre-requisites
+  hosts: all
+  roles:
+    - common
+
+- name: Swarm mode initialize
+  hosts: AP1
+  roles:
+    - swarm-init
+
+- name: Add manager node to swarm
+  hosts: AP2
+  roles:
+    - add-manager
+
+- name: Setup swarm network
+  hosts: AP1
+  roles:
+    - swarm-network
+  
+- name: Add label to nodes
+  hosts: AP1
+  roles:
+    - label-node

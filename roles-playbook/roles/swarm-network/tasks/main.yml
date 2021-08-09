@@ -1,0 +1,20 @@
+---
+- name: Check overlay network in swarm
+  shell: 
+    cmd: docker network inspect {{ SWARM_OVERLAY_NETWORK }} --format '{''{ (index .IPAM.Config 0).Subnet }''}'
+  register: network_status
+  ignore_errors: true
+
+- name: Print network inspect result
+  debug: msg="{{ network_status.stdout }}"
+
+- name: Delete error definition overlay network
+  shell:
+    cmd: docker network rm {{ SWARM_OVERLAY_NETWORK }}
+  when: network_status.stdout != SWARM_OVERLAY_NETWORK_CIDR
+  register: network_remove
+  ignore_errors: true
+
+- name: Create overlay network
+  shell: docker network create -d overlay --subnet {{ SWARM_OVERLAY_NETWORK_CIDR }} {{ SWARM_OVERLAY_NETWORK }}
+  when: network_status.rc != 0 or network_status.stdout != SWARM_OVERLAY_NETWORK_CIDR

@@ -1,0 +1,37 @@
+---
+- name: Setup hostname
+  hostname:
+    name: "{{ AP1_HOSTNAME }}"
+
+- name: Reset ssh connection for flush group settings
+  meta: reset_connection
+
+- name: Enable docker daemon and started
+  shell:
+    cmd: docker info
+  register: docker_status
+
+- name: Check swarm mode
+  shell: docker node ls
+  register: swarm_status
+  ignore_errors: true
+
+- name: Initial swarm manager
+  shell:
+    cmd: docker swarm init
+  when: swarm_status.rc != 0
+
+- name: Get join-token of manager node
+  shell: docker swarm join-token manager --quiet
+  register: manager_token
+
+- name: Add vars to others hosts
+  add_host:
+    name: SWARM_INFO
+    token: "{{ manager_token }}"
+    addr: "{{ ansible_default_ipv4.address }}"
+
+- name: Login to default container registry
+  shell: 
+    cmd: "docker login --username {{ REG_USER }} --password-stdin {{ REG_ENDPOINT }}"
+    stdin: "{{ REG_PASS }}"

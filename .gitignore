@@ -1,1 +1,3 @@
 inventory
+daemon.json
+roles-playbook/group_vars/all

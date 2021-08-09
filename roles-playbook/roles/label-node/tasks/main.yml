@@ -1,0 +1,32 @@
+---
+- name: Check node1 label name
+  shell: 
+    cmd: docker node inspect {{ AP1_HOSTNAME }} --format '{''{ .Spec.Labels.name }''}'
+  register: node1_labelname
+  ignore_errors: true
+
+- name: If node1 label not correct , remove it !
+  shell:
+    cmd: docker node update --label-rm name {{ AP1_HOSTNAME }}
+  when: node1_labelname.stdout != '<no value>' and node1_labelname.stdout != AP1_LABEL_VALUE
+
+- name: Make sure node2 correct key-value label is created
+  shell:
+    cmd: docker node update --label-add name={{ AP1_LABEL_VALUE }} {{ AP1_HOSTNAME }}
+  when: node1_labelname != AP1_LABEL_VALUE
+
+- name: Check node2 label name
+  shell: 
+    cmd: docker node inspect {{ AP2_HOSTNAME }} --format '{''{ .Spec.Labels.name }''}'
+  register: node2_labelname
+  ignore_errors: true
+
+- name: If node2 label not correct , remove it !
+  shell:
+    cmd: docker node update --label-rm name {{ AP2_HOSTNAME }}
+  when: node2_labelname.stdout != '<no value>' and node2_labelname.stdout != AP2_LABEL_VALUE
+
+- name: Make sure node2 correct key-value label is created
+  shell:
+    cmd: docker node update --label-add name={{ AP2_LABEL_VALUE }} {{ AP2_HOSTNAME }}
+  when: node2_labelname != AP2_LABEL_VALUE

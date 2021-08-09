@@ -1,0 +1,3 @@
+# Label key is defineded `name` , refer the tasks/main.yml
+AP1_LABEL_VALUE: "AP1"
+AP2_LABEL_VALUE: "AP2"

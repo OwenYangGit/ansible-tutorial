@@ -1,0 +1,26 @@
+---
+- name: Install Packages
+  apt: name={{ item }} state=latest update_cache=yes
+  become: yes
+  with_items: "{{ packages }}"
+
+- name: Setup permissions for users
+  become: yes
+  user: 
+    name: mes
+    comment: For docker user
+    groups: docker
+    append: 'yes'
+
+- name: Copy docker configuration to hosts
+  become: yes
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+
+- name: Enable docker daemon and started
+  become: yes
+  systemd:
+    state: restarted
+    enabled: yes
+    name: docker
