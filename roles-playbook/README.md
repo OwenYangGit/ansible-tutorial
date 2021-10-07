@@ -2,7 +2,8 @@
 
 ## About roles-playbook 
 
-### Prepare inventory file , for example
+### Prerequisite => prepare inventory file , for example
+```
 [AP1]
 192.168.1.1 ansible_become_password="pwd"
 
@@ -16,7 +17,7 @@ ansible_ssh_private_key_file=priv-key
 [AP2:vars]
 ansible_ssh_user=example
 ansible_ssh_private_key_file=priv-key
-
+```
 
 ### group_vars on top level
 ```
