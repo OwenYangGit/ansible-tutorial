@@ -1,0 +1,19 @@
+---
+- name: Set timezone to Asia/Taipei
+  become: yes
+  community.general.timezone:
+    name: Asia/Taipei
+
+- name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 2,12 * * docker image prune -fa > ~/cron.log"
+  ansible.builtin.cron:
+    name: "Auto prune docker images"
+    minute: "0"
+    hour: "2,12"
+    job: "docker image prune -fa > ~/cron.log"
+
+- name: Restart cron service
+  become: yes
+  systemd:
+    state: restarted
+    enabled: yes
+    name: cron

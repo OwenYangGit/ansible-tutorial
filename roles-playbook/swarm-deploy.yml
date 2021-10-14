@@ -23,3 +23,9 @@
   hosts: AP1
   roles:
     - label-node
+
+- name: Prepare system settings
+  hosts: all
+  tags: "system-prepare"
+  roles:
+    - system-prepare
