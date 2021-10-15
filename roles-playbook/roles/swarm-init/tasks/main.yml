@@ -25,6 +25,7 @@
   shell: docker swarm join-token manager --quiet
   register: manager_token
 
+# https://serverfault.com/questions/962040/sharing-ansible-variable-between-plays
 - name: Add vars to others hosts
   add_host:
     name: SWARM_INFO
