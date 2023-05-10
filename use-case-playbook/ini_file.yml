@@ -1,6 +1,8 @@
 - name: Create INI format configuration as a temp file and configure that to meet requirements
   hosts: localhost
   connection: local
+  vars_files:
+    - vars/vars.yml
   tasks:
     - name: Create temp file
       ansible.builtin.tempfile:
@@ -9,10 +11,12 @@
     - name: Print temp file location
       ansible.builtin.debug:
         msg: "{{ ini_temp_file.path }}"
+        
     - name: Set first INI format section in file
       community.general.ini_file:
         path: "{{ ini_temp_file.path }}"
         section: drinks
-        option: key
-        value: first-value
+        option: "{{ item.key }}"
+        value: "{{ item.value }}"
         state: present
+      loop: "{{ ansible_dict | dict2items }}"

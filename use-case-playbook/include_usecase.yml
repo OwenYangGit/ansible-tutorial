@@ -1,0 +1,6 @@
+# Test loop_control and the loop_var option how to work
+- name: Show include task use case and loop in two tasks does what happend
+  hosts: localhost
+  connection: local
+  roles:
+  - role: 'include'

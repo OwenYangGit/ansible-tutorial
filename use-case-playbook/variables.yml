@@ -1,0 +1,40 @@
+- name: Only testing variables usage in playbook
+  hosts: localhost
+  connection: local
+  vars_files:
+    - vars/vars.yml
+  tasks:
+    - name: Show every item in vars
+      ansible.builtin.debug:
+        msg: "{{ item.value }}"
+      loop: "{{ ansible_dict | dict2items }}"
+      # 控制 log 訊息在畫面上的顯示，方便用於結構複雜的變數資料，因為複雜資料在 log output 上會比較難查看
+      # 可以註解，查看有無 loop_control 的 log output 變化
+      loop_control:
+        label: "{{ item.key }}"
+
+    - name: Print items between next paused 2 seconds (delay work use-case)
+      ansible.builtin.debug:
+        msg: "{{ item.value }}"
+      loop: "{{ ansible_dict | dict2items }}"
+      loop_control:
+        pause: 2
+
+    - name: Print items with query (ansible2.5 new jinja2 template function)
+      ansible.builtin.debug:
+        msg: "{{ item.value }}"
+      loop: "{{ q('dict', ansible_dict) }}"
+
+    - name: Print items with lookup [same as above result] (ansible2.5 new jinja2 template function)
+      ansible.builtin.debug:
+        msg: "{{ item.value }}"
+      loop: "{{ lookup('dict', ansible_dict, wantlist=True) }}"
+
+    - name: Set vars in one task test
+      ansible.builtin.debug:
+        msg: "{{ my_var }}"
+      vars:
+        my_var: hello@@
+      vars_files:
+        - vars/vars.yml
+      

@@ -1,0 +1,13 @@
+# list
+ansible_list:
+  - hello
+  - testing
+  - boring
+  - check
+
+# dict
+ansible_dict:
+  apple: iphone-15
+  microsoft: surface-11
+  google: google-pixel-13
+  sony: xperia-100

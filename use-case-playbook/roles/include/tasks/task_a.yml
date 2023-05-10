@@ -1,0 +1,19 @@
+- name: Show message with loop
+  ansible.builtin.debug:
+    msg: "{{ outer_item }} == {{ inner_item }}"
+  loop:
+    - jan
+    - feb
+    - mar
+    - apr
+    - may
+    - june
+    - july
+    - aug
+    - sep
+    - oct
+    - nov
+    - dec
+  loop_control:
+    loop_var: inner_item
+    
