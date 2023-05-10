@@ -1,0 +1,26 @@
+# This is result of executed command `yq '.application.image.repository |= sub(".*" , "hello")' sample.yml > sample2.yml`
+# String replace and generated new YAML use case
+namespace: testing
+application:
+  replicaCount: 1
+  image:
+    repository: hello
+    pullPolicy: Always
+    tag: dev
+  service:
+    type: ClusterIP
+    port: 9000
+    targetPort: 9000
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: enabled
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 50
+    # targetMemoryUtilizationPercentage: 80
