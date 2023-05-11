@@ -1,0 +1,29 @@
+- name: Download cloudwatch agent package
+  ansible.builtin.get_url:
+    url: "{{ install.download_link }}"
+    dest: "{{ ansible_env['HOME'] }}/amazon-cloudwatch-agent.deb"
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_major_version'] == "22"
+
+- name: install package in different package type
+  become: yes
+  ansible.builtin.shell: dpkg -i -E ./amazon-cloudwatch-agent.deb
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env['HOME'] }}"
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_major_version'] == "22"
+
+- name: copy configuration to cloudwatch agent server
+  become: yes
+  ansible.builtin.copy:
+    src: "{{ install.configuration }}"
+    dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+  
+- name: start cloudwatch agent
+  become: yes
+  ansible.builtin.shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+  args:
+    executable: /bin/bash

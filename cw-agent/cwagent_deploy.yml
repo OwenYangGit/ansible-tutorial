@@ -1,0 +1,11 @@
+- name: install and deploy cloudwatch agent
+  hosts: all
+  tasks:
+    - name: show facts
+      ansible.builtin.debug:
+        var: ansible_facts
+      vars:
+        - print: false
+      when: print
+  roles:
+    - cwagent_install

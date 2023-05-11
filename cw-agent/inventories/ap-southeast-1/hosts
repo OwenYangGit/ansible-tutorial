@@ -1,0 +1,1 @@
+monitoring-testing ansible_host=11.11.11.11 ansible_user=ubuntu
