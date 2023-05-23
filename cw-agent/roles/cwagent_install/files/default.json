@@ -32,7 +32,7 @@
             "total",
             "used"
           ],
-           "ignore_file_system_types": [
+          "ignore_file_system_types": [
             "sysfs", "devtmpfs"
           ],
           "metrics_collection_interval": 60,

@@ -28,7 +28,7 @@
           {"name": "total", "rename": "DISK_TOTAL_GB", "unit": "Gigabytes"},
           {"name": "used_percent", "rename": "DISK_USED_PERCENT"}
         ],
-         "ignore_file_system_types": [
+        "ignore_file_system_types": [
           "sysfs", "devtmpfs"
         ],
         "metrics_collection_interval": 60

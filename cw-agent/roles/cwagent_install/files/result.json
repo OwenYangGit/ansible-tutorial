@@ -1,0 +1,79 @@
+{
+  "agent": {
+    "metrics_collection_interval": 10,
+    "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
+    "region": "ap-southeast-1"
+  },
+  "metrics": {
+    "namespace": "Development2/ap-southeast-1",
+    "metrics_collected": {
+      "cpu": {
+        "resources": [
+          "*"
+        ],
+        "measurement": [
+          {
+            "name": "cpu_usage_idle",
+            "rename": "CPU_USAGE_IDLE",
+            "unit": "Percent"
+          },
+          {
+            "name": "cpu_usage_nice",
+            "unit": "Percent"
+          },
+          "cpu_usage_guest"
+        ],
+        "totalcpu": false,
+        "metrics_collection_interval": 30
+      },
+      "disk": {
+        "resources": [
+          "/"
+        ],
+        "measurement": [
+          {
+            "name": "free",
+            "rename": "DISK_FREE_GB",
+            "unit": "Gigabytes"
+          },
+          {
+            "name": "total",
+            "rename": "DISK_TOTAL_GB",
+            "unit": "Gigabytes"
+          },
+          {
+            "name": "used_percent",
+            "rename": "DISK_USED_PERCENT"
+          }
+        ],
+        "ignore_file_system_types": [
+          "sysfs",
+          "devtmpfs"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "mem": {
+        "measurement": [
+          {
+            "name": "used_percent",
+            "rename": "MEM_USED_PERCENT"
+          },
+          {
+            "name": "available_percent",
+            "rename": "MEM_AVAIL_PERCENT"
+          }
+        ],
+        "metrics_collection_interval": 10
+      }
+    },
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}"
+    },
+    "aggregation_dimensions": [
+      [
+        "InstanceId"
+      ]
+    ],
+    "force_flush_interval": 30
+  }
+}
