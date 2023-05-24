@@ -1,0 +1,47 @@
+- name: create cpu high 75% alarm
+  amazon.aws.cloudwatch_metric_alarm:
+    state: present
+    region: ap-northeast-1
+    name: "cpu_usage_high"
+    metric: "CPU_USAGE_GUEST_PERCENT"
+    namespace: "<your_cloudwatch_namespace>"
+    statistic: Average
+    comparison: "GreaterThanOrEqualToThreshold"
+    threshold: 75.0
+    period: 60
+    evaluation_periods: 3
+    unit: "Percent"
+    description: "Test"
+    dimensions: {'InstanceId':'<your_instance_id>'}
+
+- name: create disk usage over 75% alarm
+  amazon.aws.cloudwatch_metric_alarm:
+    state: present
+    region: ap-northeast-1
+    name: "disk_usage_high"
+    metric: "DISK_USED_PERCENT"
+    namespace: "<your_cloudwatch_namespace>"
+    statistic: Average
+    comparison: "GreaterThanOrEqualToThreshold"
+    threshold: 75.0
+    period: 60
+    evaluation_periods: 3
+    unit: "Percent"
+    description: "Test"
+    dimensions: {'InstanceId':'<your_instance_id>'}
+
+- name: create memory usage over 75% alarm
+  amazon.aws.cloudwatch_metric_alarm:
+    state: present
+    region: ap-northeast-1
+    name: "mem_usage_high"
+    metric: "MEM_USED_PERCENT"
+    namespace: "<your_cloudwatch_namespace>"
+    statistic: Average
+    comparison: "GreaterThanOrEqualToThreshold"
+    threshold: 75.0
+    period: 60
+    evaluation_periods: 3
+    unit: "Percent"
+    description: "Test"
+    dimensions: {'InstanceId':'<your_instance_id>'}

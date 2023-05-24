@@ -1,0 +1,7 @@
+# 看起來不能定義 datapoints to alarm , so 部署上去會變成 evalution-period / evalution-period , 假設 evalution-period 設定 3 , 其結果 datapoints to alarm 顯示 3 out of 3
+
+- name: install cloudwatch alarm with cwagent-install playbook working together
+  hosts: localhost
+  connection: local
+  roles:
+    - cloudwatch_alarm
