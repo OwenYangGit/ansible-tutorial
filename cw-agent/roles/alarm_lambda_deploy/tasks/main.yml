@@ -1,0 +1,48 @@
+- block:
+  - name: Create a temp dir if not exists
+    ansible.builtin.file:
+      path: /tmp/lambda_package
+      state: directory
+
+  # Create Lambda functions
+
+  - name: deploy general alarm lambda use case (source event from cloudwatch alarm)
+    amazon.aws.lambda:
+      name: '{{ item.name }}'
+      state: present
+      zip_file: '{{ item.zip_file }}'
+      runtime: 'python3.10'
+      role: 'arn:aws:iam::325464225524:role/LambdaFunctionBasicRole'
+      handler: 'lambda_function.lambda_handler'
+      environment_variables: '{{ item.env_vars }}'
+      tags:
+        env: 'production'
+    loop:
+      - name: CloudWatchAlarmFunction
+        # need packaging dependencies files in zip format compressed file
+        zip_file: my-deployment-package.zip
+        env_vars:
+          env: "<something_if_needed_env_vars>"
+    register: my_function
+
+  - name: debug
+    ansible.builtin.debug:
+      var: my_function.results[0].configuration.function_arn
+
+  always:
+  - name: clean temp dir
+    file:
+      path: /tmp/lambda_package
+      state: absent
+    run_once: true
+  
+- name: Create alarm SNS topic and set lambda subscription
+  community.aws.sns_topic:
+    name: "CloudWatchAlarmInCritical"
+    state: present
+    display_name: "CloudWatchAlarmInCritical"
+    subscriptions:
+      - endpoint: "{{ my_function.results[0].configuration.function_arn }}"
+        protocol: "lambda" # protocol refer [https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sns/subscribe.html#options]
+    tags:
+      env: production

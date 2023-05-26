@@ -4,4 +4,5 @@
   hosts: localhost
   connection: local
   roles:
+    - alarm_lambda_deploy
     - cloudwatch_alarm
