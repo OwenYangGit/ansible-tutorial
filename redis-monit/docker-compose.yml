@@ -20,3 +20,12 @@ services:
       - "3000:3000"
     volumes:
       - "./grafana-datasources.yml:/etc/grafana/provisioning/datasources/prometheus.yaml"
+  python-redis-client:
+    image: python:3.10
+    volumes:
+      - "./main.py:/app/main.py"
+      - "./entrypoint.sh:/app/entrypoint.sh"
+    command: ["bash", "/app/entrypoint.sh"]
+    tty: true
+    stdin_open: true
+    depends_on: ["redis"]

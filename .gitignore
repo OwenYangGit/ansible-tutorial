@@ -3,3 +3,6 @@ daemon.json
 roles-playbook/group_vars/all
 roles-playbook/services-roles
 roles-playbook/services-deploy.yml
+
+#[python]
+.venv
