@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 
 r = redis.Redis(
-    host='localhost',
+    host='redis',
     port=6379)
 
 for i in range(1,100):

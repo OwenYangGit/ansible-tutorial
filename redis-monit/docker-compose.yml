@@ -24,6 +24,7 @@ services:
     image: python:3.10
     volumes:
       - "./main.py:/app/main.py"
+      - "./flask.py:/app/flask.py"
       - "./entrypoint.sh:/app/entrypoint.sh"
     command: ["bash", "/app/entrypoint.sh"]
     tty: true
