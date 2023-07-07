@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__)
 
-@app.route('/webhook')
+@app.route('/webhook',methods=["POST","PUT"])
 def index():
     message = request.get_json()
     print(json.dumps(message ,indent=2))
