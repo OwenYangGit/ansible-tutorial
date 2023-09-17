@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+
+  {{ lookup('vars', p_name)[type]['container_name'] }}:
+    image: {{ lookup('vars', p_name)[type]['image'] }}
+    container_name: {{ lookup('vars', p_name)[type]['container_name'] }}
+    ports:
+    {% for i in lookup('vars', p_name)[type]['ports'] -%}
+        - {{ '"'~i~':'~i~'"' }}
+    {% endfor -%}
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: default_network

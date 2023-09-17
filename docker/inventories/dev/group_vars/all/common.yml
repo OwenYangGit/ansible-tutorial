@@ -3,5 +3,10 @@ application_dir:
   data: /opt/app/data
   log: /opt/app/log
   config: /opt/app/config
+  package: /opt/app/package
 
-aws_ecr_repository_endpoint: 066558833665.dkr.ecr.ap-northeast-1.amazonaws.com
+aws:
+  ecr:
+    region: ap-northeast-1
+    registry: 066558833665.dkr.ecr.ap-northeast-1.amazonaws.com
+    username: AWS

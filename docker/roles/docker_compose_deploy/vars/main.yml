@@ -8,7 +8,7 @@ demo:
       - 443
   backend: 
     enabled: true
-    image: nginx:alpine
+    image: 066558833665.dkr.ecr.ap-northeast-1.amazonaws.com/demo-app:dev
     container_name: demo-be
     ports:
       - 9000
@@ -17,10 +17,21 @@ demo:
       source: demo.env.j2
       target: .env
       container_target: /var/www/html/api/.env
-      
   admin:
     enabled: false
     image: nginx:alpine
     container_name: demo-mgmt
     ports:
       - 8080
+  mysql:
+    enabled: true
+    image: mysql:8.0.23
+    container_name: demo-mysql
+    ports:
+      - 3306
+  redis:
+    enabled: true
+    image: redis:7.0-alpine
+    container_name: demo-redis
+    ports:
+      - 6379

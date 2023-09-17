@@ -1,0 +1,26 @@
+- name: Create a directory if it does not exist
+  become: yes
+  ansible.builtin.file:
+    path: '{{ item.1 }}'
+    state: directory
+    mode: '0755'
+    group: '{{ ansible_user_id }}'
+    owner: '{{ ansible_user_id }}'
+  loop: '{{ application_dir | items }}'
+
+- name: Get awscliv2 zip package
+  ansible.builtin.get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: "{{ application_dir['package']~'/'~'awscliv2.zip' }}"
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: "{{ application_dir['package']~'/'~'awscliv2.zip' }}"
+    dest: "{{ application_dir['package'] }}"
+    remote_src: yes
+
+- name: Install awscliv2
+  become: yes
+  ansible.builtin.shell: 
+    cmd: ./install
+    chdir: "{{ application_dir['package']~'/'~'aws' }}"

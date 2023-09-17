@@ -2,12 +2,38 @@
   ansible.builtin.include_tasks:
     file: init.yml
 
-# - name: Check service is be deploy before
-
-
 - name: Template docker-compose file
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: '{{ application_dir.home }}/docker-compose.yml'
     owner: '{{ ansible_user_id }}'
     mode: '0644'
+
+- name: Get ECR temp key for login
+  ansible.builtin.shell: "aws ecr get-login-password --region {{ aws.ecr.region }}"
+  register: secret
+
+- name: Log into DockerHub
+  community.docker.docker_login:
+    username: '{{ aws.ecr.username }}'
+    password: '{{ secret.stdout }}'
+    registry: '{{ aws.ecr.registry }}'
+
+- name: Pull image anyway
+  community.docker.docker_image:
+    name: "{{ lookup('vars', p_name)['backend']['image'] }}"
+    source: pull
+    force_source: true
+
+- name: Remove untagged image
+  ansible.builtin.shell:
+    cmd: (docker images -f 'dangling=true' --quiet | xargs docker rmi) || true
+
+- name: Template database compose file
+  ansible.builtin.template:
+    src: database-compose.yml.j2
+    dest: "{{ application_dir.home~'/'~item~'-compose.yml' }}"
+  vars:
+    type: '{{ item }}'
+  when: plugin is defined
+  loop: "{{ plugin | split(',')  }}"
