@@ -1,0 +1,26 @@
+demo:
+  frontend:
+    enabled: false
+    image: nginx:alpine
+    container_name: demo-fe
+    ports:
+      - 80
+      - 443
+  backend: 
+    enabled: true
+    image: nginx:alpine
+    container_name: demo-be
+    ports:
+      - 9000
+    config: true
+    volumes:
+      source: demo.env.j2
+      target: .env
+      container_target: /var/www/html/api/.env
+      
+  admin:
+    enabled: false
+    image: nginx:alpine
+    container_name: demo-mgmt
+    ports:
+      - 8080

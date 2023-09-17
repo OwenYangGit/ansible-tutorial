@@ -1,0 +1,8 @@
+Stage_Task_02 ansible_host=3.113.27.207 ansible_user=ubuntu
+
+
+[docker]
+Stage_Task_02
+
+[demo]
+Stage_Task_02

@@ -1,0 +1,4 @@
+- name: Deploy service
+  hosts: '{{ p_name }}'
+  roles:
+    - docker_compose_deploy

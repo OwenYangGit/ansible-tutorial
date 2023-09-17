@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+
+{% if lookup('vars', p_name)['frontend']['enabled'] is true %}
+  {{ lookup('vars', p_name)['frontend']['container_name']~':' }}
+    image: {{ lookup('vars', p_name)['frontend']['image'] }}
+    container_name: {{ lookup('vars', p_name)['frontend']['container_name'] }}
+    ports:
+    {% for i in lookup('vars', p_name)['frontend']['ports'] -%}
+        - {{ '"'~i~':'~i~'"' }}
+    {% endfor -%}
+    networks:
+      - default
+{% endif %}
+
+{% if lookup('vars', p_name)['backend']['enabled'] is true %}
+  {{ lookup('vars', p_name)['backend']['container_name']~':' }}
+    image: {{ lookup('vars', p_name)['backend']['image'] }}
+    container_name: {{ lookup('vars', p_name)['backend']['container_name'] }}
+    ports:
+    {% for i in lookup('vars', p_name)['backend']['ports'] -%}
+        - {{ '"'~i~':'~i~'"' }}
+    {% endfor -%}
+    networks:
+      - default
+    {% if lookup('vars', p_name)['backend']['config'] is true %}
+volumes:
+      - {{ '"'~application_dir['config']~'/'~lookup('vars', p_name)['backend']['volumes']['target']~':'~lookup('vars', p_name)['backend']['volumes']['container_target']~'"' }}
+    {% endif %}
+{% endif %}
+
+{% if lookup('vars', p_name)['admin']['enabled'] is true %}
+  {{ lookup('vars', p_name)['admin']['container_name']~':' }}
+    image: {{ lookup('vars', p_name)['admin']['image'] }}
+    container_name: {{ lookup('vars', p_name)['admin']['container_name'] }}
+    ports:
+    {% for i in lookup('vars', p_name)['admin']['ports'] -%}
+        - {{ '"'~i~':'~i~'"' }}
+    {% endfor -%}
+    networks:
+      - default
+{% endif %}
+
+networks:
+  default:
+    external:
+      name: default_network

@@ -1,0 +1,27 @@
+# - name: test
+#   ansible.builtin.debug:
+#     msg: '{{ item[1] }}'
+#   loop: '{{ application_dir | items }}'
+
+- name: Create a directory if it does not exist
+  become: yes
+  ansible.builtin.file:
+    path: '{{ item.1 }}'
+    state: directory
+    mode: '0755'
+    group: '{{ ansible_user_id }}'
+    owner: '{{ ansible_user_id }}'
+  loop: '{{ application_dir | items }}'
+
+- name: Create a docker network
+  docker_network:
+    name: default_network
+    driver: bridge
+
+- name: Template backend config file
+  ansible.builtin.template:
+    src: "{{ lookup('vars', p_name)['backend']['volumes']['source'] }}"
+    dest: "{{ application_dir['config']~'/'~lookup('vars', p_name)['backend']['volumes']['target'] }}"
+    owner: '{{ ansible_user_id }}'
+    mode: '0644'
+  when: lookup('vars', p_name)['backend']['config'] == true

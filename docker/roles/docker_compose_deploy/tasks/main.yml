@@ -1,0 +1,13 @@
+- name: Init env
+  ansible.builtin.include_tasks:
+    file: init.yml
+
+# - name: Check service is be deploy before
+
+
+- name: Template docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: '{{ application_dir.home }}/docker-compose.yml'
+    owner: '{{ ansible_user_id }}'
+    mode: '0644'

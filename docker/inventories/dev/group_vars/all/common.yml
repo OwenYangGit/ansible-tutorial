@@ -1,0 +1,7 @@
+application_dir:
+  home: /opt/app/home
+  data: /opt/app/data
+  log: /opt/app/log
+  config: /opt/app/config
+
+aws_ecr_repository_endpoint: 066558833665.dkr.ecr.ap-northeast-1.amazonaws.com
